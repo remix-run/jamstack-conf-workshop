@@ -1,13 +1,12 @@
-import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useCatch, useLoaderData, useParams } from "@remix-run/react";
 import { getCustomerDetails } from "~/models/customer.server";
 import { requireUser } from "~/session.server";
 import { currencyFormatter } from "~/utils";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }) {
   await requireUser(request);
-  let customerId = params.customerId!;
+  let customerId = params.customerId;
   // this is artificially slowed down the response to show the loading state
   let customer = await getCustomerDetails(customerId);
   if (!customer) {
@@ -17,7 +16,7 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export default function CustomerRoute() {
-  let { customer } = useLoaderData<typeof loader>();
+  let { customer } = useLoaderData();
   return (
     <div className="relative p-10">
       <div className="text-[length:14px] font-bold leading-6">

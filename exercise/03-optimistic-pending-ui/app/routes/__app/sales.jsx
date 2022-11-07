@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { LoaderArgs } from "@remix-run/node";
+/* eslint-disable no-unused-vars */
 import { json } from "@remix-run/node";
 import clsx from "clsx";
 import { NavLink, Outlet, useLoaderData, useLocation } from "@remix-run/react";
@@ -9,7 +8,7 @@ import { getFirstInvoice } from "~/models/invoice.server";
 import { requireUser } from "~/session.server";
 import { useDelayedLoadingState } from "~/utils";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }) {
   await requireUser(request);
   const [firstInvoice, firstCustomer] = await Promise.all([
     getFirstInvoice(),
@@ -21,15 +20,10 @@ export async function loader({ request }: LoaderArgs) {
   });
 }
 
-const subpages = [
-  "subscriptions",
-  "invoices",
-  "customers",
-  "deposits",
-] as const;
+const subpages = ["subscriptions", "invoices", "customers", "deposits"];
 
 export default function SalesRoute() {
-  let data = useLoaderData<typeof loader>();
+  let data = useLoaderData();
   let location = useLocation();
 
   let activeNavLink =
@@ -97,7 +91,7 @@ export default function SalesRoute() {
   );
 }
 
-function Spinner({ visible }: { visible: boolean }) {
+function Spinner({ visible }) {
   return (
     <div
       className={clsx(
@@ -113,6 +107,6 @@ function Spinner({ visible }: { visible: boolean }) {
   );
 }
 
-function getLinkClassName({ isActive }: { isActive: boolean }) {
+function getLinkClassName({ isActive }) {
   return isActive ? "font-bold text-black" : "";
 }

@@ -1,12 +1,11 @@
 import { Form } from "@remix-run/react";
-import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { inputClasses, LabelText, submitButtonClasses } from "~/components";
 import { createCustomer } from "~/models/customer.server";
 import { requireUser } from "~/session.server";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }) {
   await requireUser(request);
   let formData = await request.formData();
   let name = formData.get("name");

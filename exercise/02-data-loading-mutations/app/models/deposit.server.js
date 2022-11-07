@@ -1,7 +1,4 @@
-import type { Deposit } from "@prisma/client";
 import { prisma } from "~/db.server";
-
-export type { Deposit };
 
 export async function getDepositListItems() {
   const deposits = await prisma.deposit.findMany({
@@ -33,19 +30,17 @@ export async function getDepositListItems() {
   }));
 }
 
-export async function getDepositDetails(depositId: string) {
+export async function getDepositDetails(depositId) {
   return prisma.deposit.findFirst({
     where: { id: depositId },
     select: { note: true },
   });
 }
 
-export async function createDeposit(
-  data: Pick<Deposit, "invoiceId" | "amount" | "note" | "depositDate">,
-) {
+export async function createDeposit(data) {
   return prisma.deposit.create({ data });
 }
 
-export async function deleteDeposit(id: string) {
+export async function deleteDeposit(id) {
   return prisma.deposit.delete({ where: { id } });
 }

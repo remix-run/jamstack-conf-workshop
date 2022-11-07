@@ -1,11 +1,10 @@
 import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { FilePlusIcon } from "~/components";
 import { requireUser } from "~/session.server";
 import { getCustomerListItems } from "~/models/customer.server";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }) {
   await requireUser(request);
   return json({
     customers: await getCustomerListItems(),
@@ -13,7 +12,7 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function Customers() {
-  const { customers } = useLoaderData<typeof loader>();
+  const { customers } = useLoaderData();
 
   return (
     <div className="flex overflow-hidden rounded-lg border border-gray-100">

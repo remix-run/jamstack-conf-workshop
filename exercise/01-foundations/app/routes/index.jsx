@@ -10,9 +10,6 @@ export default function HomePage() {
   return (
     <div className="home">
       <h1>Welcome to JamStack Conf!</h1>
-      <nav aria-label="main">
-        <NavLink to="/app">App</NavLink>
-      </nav>
     </div>
   );
 }

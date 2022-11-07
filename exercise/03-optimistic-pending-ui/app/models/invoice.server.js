@@ -1,19 +1,11 @@
 import { prisma } from "~/db.server";
-import type { Invoice, LineItem } from "@prisma/client";
 
-export type { Invoice, LineItem };
-export type DueStatus = "paid" | "overpaid" | "overdue" | "due";
-
-const getDaysToDueDate = (date: Date) =>
+const getDaysToDueDate = (date) =>
   Math.ceil(
     (date.getTime() - asUTC(new Date()).getTime()) / (1000 * 60 * 60 * 24),
   );
 
-export function getInvoiceDerivedData(invoice: {
-  dueDate: Date;
-  lineItems: Array<{ quantity: number; unitPrice: number }>;
-  deposits: Array<{ amount: number }>;
-}) {
+export function getInvoiceDerivedData(invoice) {
   const daysToDueDate = getDaysToDueDate(invoice.dueDate);
 
   const totalAmount = invoice.lineItems.reduce(
@@ -24,7 +16,7 @@ export function getInvoiceDerivedData(invoice: {
     (acc, deposit) => acc + deposit.amount,
     0,
   );
-  const dueStatus: DueStatus =
+  const dueStatus =
     totalAmount === totalDeposits
       ? "paid"
       : totalDeposits > totalAmount
@@ -55,7 +47,7 @@ export function getInvoiceDerivedData(invoice: {
   };
 }
 
-function asUTC(date: Date) {
+function asUTC(date) {
   return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 }
 
@@ -90,7 +82,7 @@ export async function getInvoiceListItems() {
   });
 }
 
-export async function getInvoiceDetails(invoiceId: string) {
+export async function getInvoiceDetails(invoiceId) {
   const invoice = await prisma.invoice.findUnique({
     where: { id: invoiceId },
     select: {
@@ -117,20 +109,7 @@ export async function getInvoiceDetails(invoiceId: string) {
   return { invoice, ...getInvoiceDerivedData(invoice) };
 }
 
-export type LineItemFields = Pick<
-  LineItem,
-  "quantity" | "unitPrice" | "description"
->;
-
-export async function createInvoice({
-  dueDate,
-  customerId,
-  lineItems,
-}: {
-  dueDate: Date;
-  customerId: string;
-  lineItems: Array<LineItemFields>;
-}) {
+export async function createInvoice({ dueDate, customerId, lineItems }) {
   const largestInvoiceNumber = await prisma.invoice.findFirst({
     select: { number: true },
     orderBy: { number: "desc" },

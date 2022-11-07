@@ -1,9 +1,8 @@
-import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { getFirstCustomer } from "~/models/customer.server";
 import { requireUser } from "~/session.server";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }) {
   await requireUser(request);
   let firstCustomer = await getFirstCustomer();
   if (!firstCustomer) {

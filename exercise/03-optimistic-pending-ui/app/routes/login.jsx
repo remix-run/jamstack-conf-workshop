@@ -1,14 +1,13 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
 
 import { createUserSession, getUserId } from "~/session.server";
-import { createUser, getUserByEmail } from "~/models/user.server";
+import { verifyLogin } from "~/models/user.server";
 import { safeRedirect, validateEmail } from "~/utils";
 import { FullFakebooksLogo, inputClasses } from "~/components";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }) {
   let userId = await getUserId(request);
   if (userId) {
     return redirect("/");
@@ -16,11 +15,10 @@ export async function loader({ request }: LoaderArgs) {
   return json({});
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }) {
   let formData = await request.formData();
   let email = formData.get("email");
   let password = formData.get("password");
-  let passwordConfirm = formData.get("passwordConfirm");
   let redirectTo = safeRedirect(formData.get("redirectTo"), "/");
   let remember = formData.get("remember");
 
@@ -30,7 +28,6 @@ export async function action({ request }: ActionArgs) {
         errors: {
           email: "Email is invalid",
           password: null,
-          passwordConfirm: null,
         },
       },
       400,
@@ -43,62 +40,22 @@ export async function action({ request }: ActionArgs) {
         errors: {
           email: null,
           password: "Password is required",
-          passwordConfirm: null,
-        },
-      },
-      400,
-    );
-  }
-  if (password.length < 8) {
-    return json(
-      {
-        errors: {
-          email: null,
-          password: "Password is too short",
-          passwordConfirm: null,
-        },
-      },
-      400,
-    );
-  }
-  if (passwordConfirm !== password) {
-    return json(
-      {
-        errors: {
-          email: null,
-          password: null,
-          passwordConfirm: "Passwords do not match",
         },
       },
       400,
     );
   }
 
-  let existingUser = await getUserByEmail(email);
-  if (existingUser) {
-    return json(
-      {
-        errors: {
-          email: "A user already exists with this email",
-          password: null,
-          passwordConfirm: null,
-        },
-      },
-      400,
-    );
-  }
-
-  let user = await createUser(email, password);
+  let user = await verifyLogin(email, password);
   if (!user) {
     return json(
       {
         errors: {
-          email: "Something went wrong",
+          email: "Invalid email or password",
           password: null,
-          passwordConfirm: null,
         },
       },
-      500,
+      400,
     );
   }
 
@@ -112,31 +69,26 @@ export async function action({ request }: ActionArgs) {
 
 export function meta() {
   return {
-    title: "Sing up for Fakebooks",
+    title: "Login to Fakebooks",
   };
 }
 
-export default function SignupPage() {
+export default function LoginPage() {
   let [searchParams] = useSearchParams();
   let redirectTo = searchParams.get("redirectTo") ?? "";
-  let actionData = useActionData<typeof action>();
-  let emailRef = React.useRef<HTMLInputElement>(null);
-  let passwordRef = React.useRef<HTMLInputElement>(null);
-  let passwordConfirmRef = React.useRef<HTMLInputElement>(null);
-
-  let emailError = actionData?.errors.email;
-  let passwordError = actionData?.errors.password;
-  let passwordConfirmError = actionData?.errors.passwordConfirm;
+  let actionData = useActionData();
+  let emailRef = React.useRef(null);
+  let passwordRef = React.useRef(null);
+  let emailError = actionData?.errors.email || null;
+  let passwordError = actionData?.errors.password || null;
 
   React.useEffect(() => {
     if (emailError) {
       emailRef.current?.focus();
     } else if (passwordError) {
       passwordRef.current?.focus();
-    } else if (passwordConfirmError) {
-      passwordConfirmRef.current?.focus();
     }
-  }, [emailError, passwordError, passwordConfirmError]);
+  }, [emailError, passwordError]);
 
   return (
     <div className="flex min-h-full flex-col justify-center">
@@ -186,7 +138,7 @@ export default function SignupPage() {
                 ref={passwordRef}
                 name="password"
                 type="password"
-                autoComplete="off"
+                autoComplete="current-password"
                 aria-invalid={passwordError ? true : undefined}
                 aria-errormessage={passwordError ? "password-error" : undefined}
                 className={inputClasses}
@@ -194,34 +146,6 @@ export default function SignupPage() {
               {passwordError && (
                 <div className="pt-1 text-red-700" id="password-error">
                   {passwordError}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="passwordConfirm"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Confirm Password
-            </label>
-            <div className="mt-1">
-              <input
-                id="passwordConfirm"
-                ref={passwordConfirmRef}
-                name="passwordConfirm"
-                type="password"
-                autoComplete="off"
-                aria-invalid={passwordConfirmError ? true : undefined}
-                aria-errormessage={
-                  passwordConfirmError ? "password-confirm-error" : undefined
-                }
-                className={inputClasses}
-              />
-              {passwordConfirmError && (
-                <div className="pt-1 text-red-700" id="password-confirm-error">
-                  {passwordConfirmError}
                 </div>
               )}
             </div>
@@ -247,15 +171,15 @@ export default function SignupPage() {
           <div className="flex flex-col gap-4 md:flex-row md:gap-6">
             <button
               type="submit"
-              className="w-full rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+              className="w-full rounded bg-green-500 py-2 px-4 text-white hover:bg-green-600 focus:bg-green-400"
             >
-              Sign Up
+              Log in
             </button>
           </div>
           <p className="text-center">
-            Already a user?{" "}
-            <Link to="/login" className="underline">
-              Log in.
+            New here?{" "}
+            <Link to="/signup" className="underline">
+              Sign up.
             </Link>
           </p>
         </Form>

@@ -1,9 +1,7 @@
-import type { Customer } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { wait } from "~/utils";
 import { getInvoiceDerivedData } from "./invoice.server";
 
-export async function searchCustomers(query: string) {
+export async function searchCustomers(query) {
   const customers = await prisma.customer.findMany({
     select: {
       id: true,
@@ -34,15 +32,14 @@ export async function getCustomerListItems() {
   });
 }
 
-export async function getCustomerInfo(customerId: string) {
+export async function getCustomerInfo(customerId) {
   return prisma.customer.findUnique({
     where: { id: customerId },
     select: { name: true, email: true },
   });
 }
 
-export async function getCustomerDetails(customerId: string) {
-  await wait(900);
+export async function getCustomerDetails(customerId) {
   let customer = await prisma.customer.findUnique({
     where: { id: customerId },
     select: {
@@ -78,9 +75,6 @@ export async function getCustomerDetails(customerId: string) {
   return { name: customer.name, email: customer.email, invoiceDetails };
 }
 
-export async function createCustomer({
-  name,
-  email,
-}: Pick<Customer, "name" | "email">) {
+export async function createCustomer({ name, email }) {
   return prisma.customer.create({ data: { email, name } });
 }
