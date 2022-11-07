@@ -1,0 +1,24 @@
+{
+  "files": [],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "exercise/01-foundations"
+    },
+    {
+      "path": "exercise/02-data-loading-mutations"
+    },
+    {
+      "path": "exercise/03-optimistic-pending-ui"
+    },
+    {
+      "path": "final/01-foundations"
+    },
+    {
+      "path": "final/02-data-loading-mutations"
+    },
+    {
+      "path": "final/03-optimistic-pending-ui"
+    }
+  ]
+}

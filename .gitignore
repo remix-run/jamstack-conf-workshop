@@ -1,0 +1,16 @@
+node_modules
+
+workspace/
+**/.cache/
+**/build/
+**/public/build
+**/app/styles/tailwind.css
+**/prisma/data.db
+scripts/db.json
+.DS_Store
+/NOTES.md
+
+# in a real app you'd want to not commit the .env
+# file as well, but since this is for a workshop
+# we're going to keep them around.
+# .env
