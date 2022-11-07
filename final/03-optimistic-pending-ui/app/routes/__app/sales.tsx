@@ -76,9 +76,7 @@ export default function SalesRoute() {
           Subscriptions
         </NavLink>
         <NavLink
-          to={
-            data.firstInvoiceId ? `invoices/${data.firstInvoiceId}` : "invoices"
-          }
+          to="invoices"
           className={getLinkClassName({
             isActive: activeNavLink === "invoices",
           })}
