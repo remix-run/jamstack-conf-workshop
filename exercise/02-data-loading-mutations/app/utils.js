@@ -1,7 +1,12 @@
 import { useMatches } from "@remix-run/react";
 import { useMemo, useState, useEffect, useRef } from "react";
 
-import type { User } from "~/models/user.server";
+export const DelayedLoadingStates = {
+  DELAY: "DELAY",
+  DISPLAY: "DISPLAY",
+  EXPIRE: "EXPIRE",
+  IDLE: "IDLE",
+};
 
 const DEFAULT_REDIRECT = "/";
 
@@ -12,10 +17,7 @@ const DEFAULT_REDIRECT = "/";
  * @param {string} to The redirect destination
  * @param {string} defaultRedirect The redirect to use if the to is unsafe.
  */
-export function safeRedirect(
-  to: FormDataEntryValue | string | null | undefined,
-  defaultRedirect: string = DEFAULT_REDIRECT,
-) {
+export function safeRedirect(to, defaultRedirect = DEFAULT_REDIRECT) {
   if (!to || typeof to !== "string") {
     return defaultRedirect;
   }
@@ -33,9 +35,7 @@ export function safeRedirect(
  * @param {string} id The route id
  * @returns {JSON|undefined} The router data or undefined if not found
  */
-export function useMatchesData(
-  id: string,
-): Record<string, unknown> | undefined {
+export function useMatchesData(id) {
   const matchingRoutes = useMatches();
   const route = useMemo(
     () => matchingRoutes.find((route) => route.id === id),
@@ -44,11 +44,11 @@ export function useMatchesData(
   return route?.data;
 }
 
-function isUser(user: any): user is User {
+function isUser(user) {
   return user && typeof user === "object" && typeof user.email === "string";
 }
 
-export function useOptionalUser(): User | undefined {
+export function useOptionalUser() {
   const data = useMatchesData("root");
   if (!data || !isUser(data.user)) {
     return undefined;
@@ -56,7 +56,7 @@ export function useOptionalUser(): User | undefined {
   return data.user;
 }
 
-export function useUser(): User {
+export function useUser() {
   const maybeUser = useOptionalUser();
   if (!maybeUser) {
     throw new Error(
@@ -66,7 +66,7 @@ export function useUser(): User {
   return maybeUser;
 }
 
-export function validateRedirect(to: unknown): to is string {
+export function validateRedirect(to) {
   // Always validate redirect paths to avoid open-redirect vulnerabilities!
   return !!(
     to &&
@@ -76,7 +76,7 @@ export function validateRedirect(to: unknown): to is string {
   );
 }
 
-export function validateEmail(email: unknown): email is string {
+export function validateEmail(email) {
   // This is not good email validation. If you steal this code and ship it to
   // production you will be in trouble!
   return typeof email === "string" && email.length > 3 && email.includes("@");
@@ -88,57 +88,42 @@ export const currencyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
-export function asUTC(date: Date) {
+export function asUTC(date) {
   return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 }
 
-export function parseDate(dateString: string) {
+export function parseDate(dateString) {
   const [year, month, day] = dateString.split("-").map(Number);
   return asUTC(new Date(year, month - 1, day));
 }
 
-export enum DelayedLoadingStates {
-  DELAY = "DELAY",
-  DISPLAY = "DISPLAY",
-  EXPIRE = "EXPIRE",
-  IDLE = "IDLE",
-}
-
-export function useDelayedLoadingState(
-  loading: unknown,
-  options: { delay?: number; minDuration?: number } = {},
-): {
-  state: DelayedLoadingStates;
-  isLoading: boolean;
-} {
+export function useDelayedLoadingState(loading, options = {}) {
   options = Object.assign({}, { delay: 250, minDuration: 200 }, options);
-  let [state, setState] = useState<DelayedLoadingStates>(
-    DelayedLoadingStates.IDLE,
-  );
-  let timeout = useRef<null | number>(null);
+  let [state, setState] = useState("IDLE");
+  let timeout = useRef(null);
   useEffect(() => {
     if (loading && state === "IDLE") {
-      window.clearTimeout(timeout.current!);
+      window.clearTimeout(timeout.current);
       timeout.current = window.setTimeout(() => {
         if (!loading) {
-          return setState(DelayedLoadingStates.IDLE);
+          return setState("IDLE");
         }
         timeout.current = window.setTimeout(() => {
-          setState(DelayedLoadingStates.EXPIRE);
+          setState("EXPIRE");
         }, options.minDuration);
-        setState(DelayedLoadingStates.DISPLAY);
+        setState("DISPLAY");
       }, options.delay);
-      setState(DelayedLoadingStates.DELAY);
+      setState("DELAY");
     }
 
     if (!loading && state !== "DISPLAY") {
-      window.clearTimeout(timeout.current!);
-      setState(DelayedLoadingStates.IDLE);
+      window.clearTimeout(timeout.current);
+      setState("IDLE");
     }
   }, [loading, state, options.delay, options.minDuration]);
 
   useEffect(() => {
-    return () => window.clearTimeout(timeout.current!);
+    return () => window.clearTimeout(timeout.current);
   }, []);
 
   return {

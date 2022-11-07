@@ -1,15 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { LoaderArgs } from "@remix-run/node";
+/* eslint-disable no-unused-vars */
 import { json } from "@remix-run/node";
 import { NavLink, Outlet, useLocation } from "@remix-run/react";
 import { requireUser } from "~/session.server";
 
-const subpages = [
-  "subscriptions",
-  "invoices",
-  "customers",
-  "deposits",
-] as const;
+const subpages = ["subscriptions", "invoices", "customers", "deposits"];
 
 export default function SalesRoute() {
   let location = useLocation();
@@ -75,6 +69,11 @@ export default function SalesRoute() {
   );
 }
 
-function getLinkClassName({ isActive }: { isActive: boolean }) {
+/**
+ *
+ * @param {{ isActive: boolean }} args
+ * @returns
+ */
+function getLinkClassName({ isActive }) {
   return isActive ? "font-bold text-black" : "";
 }

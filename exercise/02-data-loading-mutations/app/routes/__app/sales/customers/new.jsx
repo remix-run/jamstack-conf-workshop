@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { Form } from "@remix-run/react";
-import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { inputClasses, LabelText, submitButtonClasses } from "~/components";
 import { createCustomer } from "~/models/customer.server";

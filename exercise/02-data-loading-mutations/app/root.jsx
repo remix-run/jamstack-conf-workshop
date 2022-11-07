@@ -1,5 +1,3 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
-import type { ShouldReloadFunction } from "@remix-run/react";
 import {
   Links,
   LiveReload,
@@ -11,14 +9,16 @@ import {
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 
-export const links: LinksFunction = () => {
+export function links() {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
-};
+}
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Fakebooks Remix",
-});
+export function meta() {
+  return {
+    charset: "utf-8",
+    title: "Fakebooks Remix",
+  };
+}
 
 export default function App() {
   return (
@@ -37,5 +37,5 @@ export default function App() {
   );
 }
 
-export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) =>
+export const unstable_shouldReload = ({ submission }) =>
   submission?.action === "/logout" || submission?.action === "/login";

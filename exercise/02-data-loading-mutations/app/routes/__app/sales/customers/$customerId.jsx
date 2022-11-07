@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { LoaderArgs } from "@remix-run/node";
+/* eslint-disable no-unused-vars */
 import { json } from "@remix-run/node";
 import { Link, useCatch, useLoaderData, useParams } from "@remix-run/react";
 import { getCustomerDetails } from "~/models/customer.server";

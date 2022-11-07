@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Form, Link, NavLink, Outlet, useTransition } from "@remix-run/react";
 import clsx from "clsx";
 import {
@@ -58,7 +59,11 @@ export default function AppRoute() {
   );
 }
 
-function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
+/**
+ *
+ * @param {{ to: string; children: React.ReactNode }} props
+ */
+function NavItem({ to, children }) {
   return (
     <NavLink
       to={to}
@@ -73,7 +78,10 @@ function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   );
 }
 
-function Spinner({ visible }: { visible: boolean }) {
+/**
+ * @param {{ visible: boolean }} props
+ */
+function Spinner({ visible }) {
   return (
     <SpinnerIcon
       className={clsx("animate-spin transition-opacity", {

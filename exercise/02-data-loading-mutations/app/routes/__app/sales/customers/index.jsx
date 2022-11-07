@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { LoaderArgs } from "@remix-run/node";
+/* eslint-disable no-unused-vars */
 import { json } from "@remix-run/node";
 import { requireUser } from "~/session.server";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }) {
   return json({});
 }
 

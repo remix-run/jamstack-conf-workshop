@@ -7,7 +7,12 @@ export const submitButtonClasses =
 export const dangerButtonClasses =
   "w-full rounded bg-red-600 py-2 px-4 text-white hover:bg-red-700 focus:bg-red-500";
 
-export function LabelText({ children }: { children: React.ReactNode }) {
+/**
+ *
+ * @param {{ children: React.ReactNode }} props
+ * @returns
+ */
+export function LabelText({ children }) {
   return (
     <div className="text-[12px] font-medium uppercase leading-[24px] text-gray-400">
       {children}
@@ -15,13 +20,10 @@ export function LabelText({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function FullFakebooksLogo({
-  size,
-  position,
-}: {
-  size: "sm" | "lg";
-  position: "left" | "center";
-}) {
+/**
+ * @param {{ size: "sm" | "lg"; position: "left" | "center" }} args
+ */
+export function FullFakebooksLogo({ size, position }) {
   const [logoSize, textSize] = {
     sm: [`h-4 w-4`, `text-d-p-sm`],
     lg: [`h-12 w-12`, `text-d-h2`],
@@ -39,7 +41,10 @@ export function FullFakebooksLogo({
   );
 }
 
-export function FakebooksLogo({ className }: { className: string }) {
+/**
+ * @param {{ className: string }} props
+ */
+export function FakebooksLogo({ className }) {
   return (
     <svg
       className={className}
@@ -57,7 +62,10 @@ export function FakebooksLogo({ className }: { className: string }) {
   );
 }
 
-export function FilePlusIcon(props: React.SVGProps<SVGSVGElement>) {
+/**
+ * @param {React.SVGProps<SVGSVGElement>} props
+ */
+export function FilePlusIcon(props) {
   return (
     <svg width="24px" height="24px" fill="none" {...props}>
       <path
@@ -78,7 +86,10 @@ export function FilePlusIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
+/**
+ * @param {React.SVGProps<SVGSVGElement>} props
+ */
+export function PlusIcon(props) {
   return (
     <svg width="24px" height="24px" fill="none" {...props}>
       <path
@@ -92,7 +103,10 @@ export function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function MinusIcon(props: React.SVGProps<SVGSVGElement>) {
+/**
+ * @param {React.SVGProps<SVGSVGElement>} props
+ */
+export function MinusIcon(props) {
   return (
     <svg width="24px" height="24px" fill="none" {...props}>
       <path
@@ -106,7 +120,10 @@ export function MinusIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function CevronDownIcon(props: React.SVGProps<SVGSVGElement>) {
+/**
+ * @param {React.SVGProps<SVGSVGElement>} props
+ */
+export function CevronDownIcon(props) {
   return (
     <svg width={24} height={24} fill="none" {...props}>
       <path
@@ -120,7 +137,10 @@ export function CevronDownIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
+/**
+ * @param {React.SVGProps<SVGSVGElement>} props
+ */
+export function TrashIcon(props) {
   return (
     <svg width={24} height={24} fill="none" {...props}>
       <path
@@ -134,7 +154,10 @@ export function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function LogoutIcon(props: React.SVGProps<SVGSVGElement>) {
+/**
+ * @param {React.SVGProps<SVGSVGElement>} props
+ */
+export function LogoutIcon(props) {
   return (
     <svg width={24} height={24} fill="none" {...props}>
       <path
@@ -148,7 +171,10 @@ export function LogoutIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function UpRightArrowIcon(props: React.SVGProps<SVGSVGElement>) {
+/**
+ * @param {React.SVGProps<SVGSVGElement>} props
+ */
+export function UpRightArrowIcon(props) {
   return (
     <svg width={24} height={24} fill="none" {...props}>
       <path
@@ -162,7 +188,10 @@ export function UpRightArrowIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function SpinnerIcon(props: React.SVGProps<SVGSVGElement>) {
+/**
+ * @param {React.SVGProps<SVGSVGElement>} props
+ */
+export function SpinnerIcon(props) {
   return (
     <svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
       <path

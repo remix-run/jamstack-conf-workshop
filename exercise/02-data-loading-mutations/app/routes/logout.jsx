@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { ActionArgs } from "@remix-run/node";
+/* eslint-disable no-unused-vars */
 import { redirect } from "@remix-run/node";
 
 import { logout } from "~/session.server";

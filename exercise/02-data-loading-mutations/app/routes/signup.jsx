@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+/* eslint-disable no-unused-vars */
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 import * as React from "react";
@@ -16,9 +15,12 @@ export function meta() {
 }
 
 export default function SignupPage() {
-  let emailError: string | null = null;
-  let passwordError: string | null = null;
-  let passwordConfirmError: string | null = null;
+  /** @type {null | string}  */
+  let emailError = null;
+  /** @type {null | string}  */
+  let passwordError = null;
+  /** @type {null | string}  */
+  let passwordConfirmError = null;
 
   return (
     <div className="flex min-h-full flex-col justify-center">
