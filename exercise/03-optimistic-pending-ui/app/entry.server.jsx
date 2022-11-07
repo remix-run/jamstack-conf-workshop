@@ -2,16 +2,15 @@ import { PassThrough } from "stream";
 import { renderToPipeableStream } from "react-dom/server";
 import { RemixServer } from "@remix-run/react";
 import { Response } from "@remix-run/node";
-import type { EntryContext, Headers } from "@remix-run/node";
 import isbot from "isbot";
 
 const ABORT_DELAY = 5000;
 
 export default function handleRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  remixContext: EntryContext,
+  request,
+  responseStatusCode,
+  responseHeaders,
+  remixContext,
 ) {
   const callbackName = isbot(request.headers.get("user-agent"))
     ? "onAllReady"
@@ -36,10 +35,10 @@ export default function handleRequest(
           );
           pipe(body);
         },
-        onShellError(err: unknown) {
+        onShellError(err) {
           reject(err);
         },
-        onError(error: unknown) {
+        onError(error) {
           didError = true;
           console.error(error);
         },
