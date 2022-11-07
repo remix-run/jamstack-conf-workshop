@@ -70,17 +70,3 @@ export default function CustomerRoute() {
     </div>
   );
 }
-export function CatchBoundary() {
-  let caught = useCatch();
-  let params = useParams();
-
-  if (caught.status === 404) {
-    return (
-      <div className="p-12 text-red-500">
-        No customer found with the ID of "{params.customerId}"
-      </div>
-    );
-  }
-
-  throw new Error(`Unexpected caught response with status: ${caught.status}`);
-}
