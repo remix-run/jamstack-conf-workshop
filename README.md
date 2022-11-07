@@ -43,7 +43,7 @@ Follow these steps to get this set up:
 
 ```sh
 git clone https://github.com/remix-run/jamstack-conf-workshop.git
-cd advanced-remix
+cd jamstack-conf-workshop
 npm run setup
 ```
 
